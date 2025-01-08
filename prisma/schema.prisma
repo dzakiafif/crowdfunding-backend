@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model users {
+  id Int @id @default(autoincrement())
+  name String?
+  occupation String?
+  email String @unique
+  password String
+  avatar_file_name String?
+  role String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  campaigns campaigns[]
+  transactions transactions[]
+}
+
+model campaigns {
+  id Int @id @default(autoincrement())
+  user users @relation(fields: [user_id], references: [id])
+  user_id Int
+  name String
+  short_description String
+  description String @db.Text
+  perks String @db.Text
+  backer_count Int
+  goal_amount Int
+  current_amount Int
+  slug String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  campaign_images campaign_images[]
+  transactions transactions[]
+}
+
+model campaign_images {
+  id Int @id @default(autoincrement())
+  campaign campaigns @relation(fields: [campaign_id], references: [id])
+  campaign_id Int
+  file_name String
+  is_primary Int @db.TinyInt
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model transactions {
+id Int @id @default(autoincrement())
+campaign campaigns @relation(fields: [campaign_id], references: [id])
+campaign_id Int
+user users @relation(fields: [user_id], references: [id])
+user_id Int
+amount Int
+status String
+code String
+created_at DateTime @default(now())
+updated_at DateTime @updatedAt
+}
