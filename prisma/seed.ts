@@ -7,6 +7,7 @@ async function main() {
       email: "admin@mail.com",
       password: await bcrypt.hash("1q2w3e", 12),
       name: "admin",
+      role: "ADMIN",
     },
   });
 

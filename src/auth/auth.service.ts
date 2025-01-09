@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import { loginDto } from "./dto/login.dto";
 import { users } from "@prisma/client";
 import { registerDto } from "./dto/register.dto";
+import { NewUser } from "@app/types";
 
 @Injectable()
 export class AuthService {
@@ -13,11 +14,12 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async login(req: loginDto): Promise<users> {
+  async login(req: loginDto): Promise<NewUser> {
     const user = await this.prismaService.users.findUnique({
       where: {
         email: req.email,
       },
+      select: { id: true, email: true, role: true, password: true },
     });
 
     if (!user) {
@@ -32,7 +34,22 @@ export class AuthService {
       throw new HttpException("password not match", HttpStatus.BAD_REQUEST);
     }
 
-    return user;
+    const { password, ...newUser } = user;
+
+    const jwtPayload = {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    };
+
+    const userData = {
+      ...newUser,
+      token: null,
+    };
+
+    userData.token = this.jwtService.sign(jwtPayload);
+
+    return userData;
   }
 
   async register(req: registerDto): Promise<users> {
@@ -41,6 +58,7 @@ export class AuthService {
         email: req.email,
         password: await bcrypt.hash(req.email, 12),
         name: req.name,
+        role: "USER",
       },
     });
 
