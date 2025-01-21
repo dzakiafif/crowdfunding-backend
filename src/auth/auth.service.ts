@@ -1,5 +1,5 @@
 import { PrismaService } from "@app/prisma/prisma.service";
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import bcrypt from "bcrypt";
 import { loginDto } from "./dto/login.dto";
@@ -23,15 +23,12 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new HttpException(
-        `data with email ${req.email} not found`,
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new BadRequestException(`data with email ${req.email} not found`);
     }
 
     const checkPassword = await bcrypt.compare(req.password, user.password);
     if (!checkPassword) {
-      throw new HttpException("password not match", HttpStatus.BAD_REQUEST);
+      throw new BadRequestException("password not match");
     }
 
     const { password, ...newUser } = user;
@@ -56,7 +53,7 @@ export class AuthService {
     const user = await this.prismaService.users.create({
       data: {
         email: req.email,
-        password: await bcrypt.hash(req.email, 12),
+        password: await bcrypt.hash(req.password, 12),
         name: req.name,
         role: "USER",
       },
