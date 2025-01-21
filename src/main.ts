@@ -7,13 +7,13 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
 
-  const options = new DocumentBuilder()
+  const config = new DocumentBuilder()
     .setTitle("Rest API Crowdfunding backend")
     .setVersion("0.1")
     .build();
 
-  const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup("api", app, document);
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup("api-json", app, document);
 
   app.setGlobalPrefix("api");
   app.use(helmet());
