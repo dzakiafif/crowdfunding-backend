@@ -3,6 +3,7 @@ import { AuthService } from "./auth.service";
 import { CommonModule } from "@app/common/common.module";
 import { JwtService } from "@nestjs/jwt";
 import { PrismaService } from "@app/prisma/prisma.service";
+import { faker } from "@faker-js/faker";
 
 describe("AuthService", () => {
   let service: AuthService;
@@ -22,9 +23,9 @@ describe("AuthService", () => {
 
   it("should be registered", async () => {
     const response = await service.register({
-      email: "test1@gmail.com",
+      email: faker.internet.email(),
       password: "Gulali123@",
-      name: "test admin",
+      name: faker.person.fullName(),
     });
     expect(response).toBeDefined();
   });
