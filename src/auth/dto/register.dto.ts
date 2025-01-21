@@ -1,3 +1,4 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { z } from "zod";
 
 // Minimum 8 characters, at least one uppercase letter, one lowercase letter, one number and one special characters
@@ -21,3 +22,14 @@ export const registerSchema = z.object({
 });
 
 export type registerDto = z.infer<typeof registerSchema>;
+
+export class RequestRegisterDto {
+  @ApiProperty()
+  email: string;
+
+  @ApiProperty()
+  password: string;
+
+  @ApiProperty()
+  name: string;
+}
