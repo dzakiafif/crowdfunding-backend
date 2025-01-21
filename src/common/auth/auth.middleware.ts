@@ -8,8 +8,7 @@ import { Request, Response } from "express";
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
-  constructor(private jwtService: JwtService) {}
-
+  private readonly jwtService = new JwtService();
   use(req: Request, _res: Response, next: () => void) {
     const [type, token] = req.headers.authorization.split(" ") ?? [];
     if (!token || type !== "Bearer")
