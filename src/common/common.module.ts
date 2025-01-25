@@ -1,14 +1,23 @@
 import { Module } from "@nestjs/common";
-import { ConfigModule } from "@nestjs/config";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import { JwtModule } from "@nestjs/jwt";
+import { envSchema } from "./dto/common.dto";
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
-    JwtModule.register({
-      global: true,
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: `${process.env.JWT_EXPIRESIN}s` },
+    ConfigModule.forRoot({
+      validationSchema: envSchema,
+      validate: envSchema.parse,
+    }),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>("JWT_SECRET"),
+        signOptions: {
+          expiresIn: `${configService.get<string>("JWT_EXPIRESIN")}s`,
+        },
+      }),
     }),
   ],
 })
