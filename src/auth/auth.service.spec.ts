@@ -33,12 +33,7 @@ describe("AuthService", () => {
             },
           },
         },
-        {
-          provide: JwtService,
-          useValue: {
-            sign: jest.fn(),
-          },
-        },
+        JwtService,
       ],
       imports: [CommonModule],
     }).compile();
@@ -107,6 +102,31 @@ describe("AuthService", () => {
       });
 
       expect(prismaService.users.create).not.toHaveBeenCalled();
+    });
+  });
+  describe("login", () => {
+    it("should return an access token when login is successful", async () => {
+      const email = faker.internet.email();
+      const password = "Gulali123@";
+      const hashesPassword =
+        "$2b$12$g9E92rHmEjURX/x.TvfvduCtVu5iGF7CapB1J/Wdgpoug1y0qF1qK";
+
+      (prismaService.users.findUnique as jest.Mock).mockResolvedValue({
+        id: 1,
+        email,
+        password: hashesPassword,
+        role: "USER",
+      });
+      (bcrypt.compare as jest.Mock).mockResolvedValue(true);
+
+      const result = await service.login({ email, password });
+
+      expect(result).toEqual({
+        id: 1,
+        email,
+        role: "USER",
+        token: result.token,
+      });
     });
   });
 });

@@ -6,6 +6,7 @@ import { envSchema } from "./dto/common.dto";
 @Module({
   imports: [
     ConfigModule.forRoot({
+      isGlobal: true,
       validationSchema: envSchema,
       validate: envSchema.parse,
     }),

@@ -44,7 +44,9 @@ export class AuthService {
       token: null,
     };
 
-    userData.token = this.jwtService.sign(jwtPayload);
+    userData.token = this.jwtService.sign(jwtPayload, {
+      secret: process.env.JWT_SECRET,
+    });
 
     return userData;
   }
