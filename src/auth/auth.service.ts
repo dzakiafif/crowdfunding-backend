@@ -50,6 +50,16 @@ export class AuthService {
   }
 
   async register(req: registerDto): Promise<users> {
+    const checkUser = await this.prismaService.users.findUnique({
+      where: {
+        email: req.email,
+      },
+    });
+    if (checkUser) {
+      throw new BadRequestException(
+        `email with ${req.email} has been registered`,
+      );
+    }
     const user = await this.prismaService.users.create({
       data: {
         email: req.email,
