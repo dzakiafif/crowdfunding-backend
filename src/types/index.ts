@@ -1,3 +1,3 @@
-import { users } from "@prisma/client";
+import { users } from "@prisma/client"
 
-export type NewUser = Pick<users, "id" | "email" | "role"> & { token: string };
+export type NewUser = Pick<users, "id" | "email" | "role"> & { token: string }

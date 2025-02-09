@@ -1,11 +1,11 @@
-import { PrismaService } from "@app/prisma/prisma.service";
-import { BadRequestException, Injectable } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
-import bcrypt from "bcrypt";
-import { loginDto } from "./dto/login.dto";
-import { users } from "@prisma/client";
-import { registerDto } from "./dto/register.dto";
-import { NewUser } from "@app/types";
+import { PrismaService } from "@app/prisma/prisma.service"
+import { BadRequestException, Injectable } from "@nestjs/common"
+import { JwtService } from "@nestjs/jwt"
+import bcrypt from "bcrypt"
+import { loginDto } from "./dto/login.dto"
+import { users } from "@prisma/client"
+import { registerDto } from "./dto/register.dto"
+import { NewUser } from "@app/types"
 
 @Injectable()
 export class AuthService {
@@ -20,35 +20,35 @@ export class AuthService {
         email: req.email,
       },
       select: { id: true, email: true, role: true, password: true },
-    });
+    })
 
     if (!user) {
-      throw new BadRequestException(`data with email ${req.email} not found`);
+      throw new BadRequestException(`data with email ${req.email} not found`)
     }
 
-    const checkPassword = await bcrypt.compare(req.password, user.password);
+    const checkPassword = await bcrypt.compare(req.password, user.password)
     if (!checkPassword) {
-      throw new BadRequestException("password not match");
+      throw new BadRequestException("password not match")
     }
 
-    const { password, ...newUser } = user;
+    const { password, ...newUser } = user
 
     const jwtPayload = {
       id: user.id,
       email: user.email,
       role: user.role,
-    };
+    }
 
     const userData = {
       ...newUser,
       token: null,
-    };
+    }
 
     userData.token = this.jwtService.sign(jwtPayload, {
       secret: process.env.JWT_SECRET,
-    });
+    })
 
-    return userData;
+    return userData
   }
 
   async register(req: registerDto): Promise<users> {
@@ -56,11 +56,11 @@ export class AuthService {
       where: {
         email: req.email,
       },
-    });
+    })
     if (checkUser) {
       throw new BadRequestException(
         `email with ${req.email} has been registered`,
-      );
+      )
     }
     const user = await this.prismaService.users.create({
       data: {
@@ -69,8 +69,8 @@ export class AuthService {
         name: req.name,
         role: "USER",
       },
-    });
+    })
 
-    return user;
+    return user
   }
 }

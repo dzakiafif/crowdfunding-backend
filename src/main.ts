@@ -1,23 +1,23 @@
-import { NestFactory } from "@nestjs/core";
-import { AppModule } from "./app.module";
-import { HttpErrorFilter } from "@app/common/http-error/http-error.filter";
-import helmet from "helmet";
-import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import { NestFactory } from "@nestjs/core"
+import { AppModule } from "./app.module"
+import { HttpErrorFilter } from "@app/common/http-error/http-error.filter"
+import helmet from "helmet"
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger"
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true });
+  const app = await NestFactory.create(AppModule, { cors: true })
 
   const config = new DocumentBuilder()
     .setTitle("Rest API Crowdfunding backend")
     .setVersion("0.1")
-    .build();
+    .build()
 
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup("api-json", app, document);
+  const document = SwaggerModule.createDocument(app, config)
+  SwaggerModule.setup("api-json", app, document)
 
-  app.setGlobalPrefix("api");
-  app.use(helmet());
-  app.useGlobalFilters(new HttpErrorFilter());
-  await app.listen(process.env.PORT ?? 3000);
+  app.setGlobalPrefix("api")
+  app.use(helmet())
+  app.useGlobalFilters(new HttpErrorFilter())
+  await app.listen(process.env.PORT ?? 3000)
 }
-bootstrap();
+bootstrap()

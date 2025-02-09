@@ -7,14 +7,14 @@ import {
   Post,
   Res,
   UsePipes,
-} from "@nestjs/common";
-import { AuthService } from "./auth.service";
-import { ZodValidationPipe } from "@app/common/zod-validation/zod-validation.pipe";
-import { loginSchema, RequestLoginDto } from "./dto/login.dto";
-import { Response } from "express";
-import { registerSchema, RequestRegisterDto } from "./dto/register.dto";
-import { z } from "zod";
-import { ApiBody } from "@nestjs/swagger";
+} from "@nestjs/common"
+import { AuthService } from "./auth.service"
+import { ZodValidationPipe } from "@app/common/zod-validation/zod-validation.pipe"
+import { loginSchema, RequestLoginDto } from "./dto/login.dto"
+import { Response } from "express"
+import { registerSchema, RequestRegisterDto } from "./dto/register.dto"
+import { z } from "zod"
+import { ApiBody } from "@nestjs/swagger"
 
 @Controller("auth")
 export class AuthController {
@@ -29,13 +29,13 @@ export class AuthController {
     @Res() res: Response,
   ): Promise<void> {
     try {
-      const user = await this.authService.login(req);
-      res.status(HttpStatus.OK).json({ status: "success", data: user });
+      const user = await this.authService.login(req)
+      res.status(HttpStatus.OK).json({ status: "success", data: user })
     } catch (err) {
       res.status(HttpStatus.BAD_REQUEST).json({
         status: "error",
         message: err instanceof z.ZodError ? err : err.response.message,
-      });
+      })
     }
   }
 
@@ -48,19 +48,19 @@ export class AuthController {
     @Res() res: Response,
   ): Promise<void> {
     try {
-      const user = await this.authService.register(req);
+      const user = await this.authService.register(req)
       if (!user) {
-        throw new BadRequestException("failed created data");
+        throw new BadRequestException("failed created data")
       }
 
       res
         .status(HttpStatus.OK)
-        .json({ status: "success", message: "successfully create data" });
+        .json({ status: "success", message: "successfully create data" })
     } catch (err) {
       res.status(HttpStatus.BAD_REQUEST).json({
         status: "error",
         message: err instanceof z.ZodError ? err : err.response.message,
-      });
+      })
     }
   }
 }
