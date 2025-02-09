@@ -1,4 +1,10 @@
 {
-  "{src,test}/**/*.ts": ["eslint --fix"],
-  "./**/*.{ts,js}": ["prettier --write"]
+  "{src,test}/**/*.ts": [
+      "biome check --write --no-errors-on-unmatched",
+      "biome check --write --organize-imports-enabled=false --no-errors-on-unmatched",
+      "biome check --write --unsafe --no-errors-on-unmatched"
+  ],
+  "./**/*.{ts,js}": [
+    "biome format --write --no-errors-on-unmatched"
+  ]
 }

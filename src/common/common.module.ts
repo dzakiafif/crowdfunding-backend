@@ -1,7 +1,9 @@
-import { Module } from "@nestjs/common";
-import { ConfigModule, ConfigService } from "@nestjs/config";
-import { JwtModule } from "@nestjs/jwt";
-import { envSchema } from "./dto/common.dto";
+import { Module } from "@nestjs/common"
+import { ConfigModule, ConfigService } from "@nestjs/config"
+import { JwtModule } from "@nestjs/jwt"
+import { envSchema } from "./dto/common.dto"
+import { AuthService } from "@app/auth/auth.service"
+import { PrismaService } from "@app/prisma/prisma.service"
 
 @Module({
   imports: [
@@ -21,5 +23,6 @@ import { envSchema } from "./dto/common.dto";
       }),
     }),
   ],
+  providers: [AuthService, PrismaService],
 })
 export class CommonModule {}
